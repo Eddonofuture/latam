@@ -1,0 +1,9 @@
+pandas
+flask==2.2.2
+gunicorn
+requests
+itsdangerous
+werkzeug
+jinja2
+scikit-learn==1.1.2
+google-cloud-storage

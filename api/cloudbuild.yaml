@@ -1,0 +1,34 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "us-central1-docker.pkg.dev/${PROJECT_ID}/${_SERVICE_NAME}/${_MODEL_NAME}:${SHORT_SHA}",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "us-central1-docker.pkg.dev/${PROJECT_ID}/${_SERVICE_NAME}/${_MODEL_NAME}:${SHORT_SHA}",
+      ]
+  - name: google/cloud-sdk
+    args:
+      [
+        "gcloud",
+        "run",
+        "deploy",
+        "${_MODEL_NAME}-${SHORT_SHA}",
+        "--image=us-central1-docker.pkg.dev/${PROJECT_ID}/${_SERVICE_NAME}/${_MODEL_NAME}:${SHORT_SHA}",
+        "--region",
+        "us-central1",
+        "--platform",
+        "managed",
+        "--allow-unauthenticated",
+      ]
+#env:
+#  'MLFLOW_TRACKING_URI=34.123.167.230'
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 3600s
